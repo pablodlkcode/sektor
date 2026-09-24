@@ -905,7 +905,7 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
       );
     };
 
-    // callback tugmalar
+  // callback tugmalar
     telegramBot.on('callback_query', async (query: any) => {
       const chatId = query.message?.chat.id;
       if (!chatId || !query.data) return;
@@ -922,8 +922,6 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
         const first = processedUpdates.values().next().value;
         if (first) processedUpdates.delete(first);
       }
-
-      let session = userSessions.get(chatId) || { step: 'NONE' };
 
       if (query.data === 'noop') {
         try {
