@@ -960,12 +960,7 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
           });
 
           try {
-            await telegramBot?.answerCallbackQuery(query.id);
-          } catch (e) {}
-
-          const safeOrgName = org.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-          await telegramBot?.sendMessage(
+await telegramBot?.sendMessage(
             chatId,
             `Siz <b>${safeOrgName}</b> tashkilotini tanladingiz.\n\nIltimos, F.I.SH (Ism, familiya va otangizning ismi)ni kiriting:`,
             {
@@ -979,7 +974,7 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
         }
         return;
       }
-    });
+    }); // <-- CALLBACK_QUERY SHU YERDA TUGAYDI. BUNDAN PASTDAGI ESKI REPEAT KODLARNI O'CHIRING!
 
       if (query.data.startsWith('mfypage_')) {
         const targetPage = parseInt(query.data.replace('mfypage_', ''), 10);
