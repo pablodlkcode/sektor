@@ -949,7 +949,7 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
         return;
       }
 
-      if (query.data.startsWith('org_')) {
+if (query.data.startsWith('org_')) {
         const orgId = query.data.replace('org_', '');
         const org = organizations.find((o) => o.id === orgId) || organizations[0];
         if (org) {
@@ -960,7 +960,12 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
           });
 
           try {
-await telegramBot?.sendMessage(
+            await telegramBot?.answerCallbackQuery(query.id);
+          } catch (e) {}
+
+          const safeOrgName = org.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+          await telegramBot?.sendMessage(
             chatId,
             `Siz <b>${safeOrgName}</b> tashkilotini tanladingiz.\n\nIltimos, F.I.SH (Ism, familiya va otangizning ismi)ni kiriting:`,
             {
@@ -972,32 +977,6 @@ await telegramBot?.sendMessage(
             }
           );
         }
-        return;
-      }
-    }); // <-- CALLBACK_QUERY SHU YERDA TUGAYDI. BUNDAN PASTDAGI ESKI REPEAT KODLARNI O'CHIRING!
-
-      if (query.data.startsWith('mfypage_')) {
-        const targetPage = parseInt(query.data.replace('mfypage_', ''), 10);
-        session.mfyPage = targetPage;
-        userSessions.set(chatId, session);
-
-        const { keyboard, totalPages, currentPage } = getMfyInlineKeyboard(targetPage);
-        try {
-          await telegramBot?.editMessageText(
-            `📍 Yashash joyingiz bo‘yicha <b>Mahallangizni (MFY)</b> tanlang:\n<i>(Sahifa ${currentPage + 1}/${totalPages})</i>`,
-            {
-              chat_id: chatId,
-              message_id: query.message.message_id,
-              parse_mode: 'HTML',
-              reply_markup: {
-                inline_keyboard: keyboard,
-              },
-            }
-          );
-        } catch (e) {
-          // ignore edit errors
-        }
-        await telegramBot?.answerCallbackQuery(query.id);
         return;
       }
 
