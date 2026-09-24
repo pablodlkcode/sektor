@@ -950,33 +950,36 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
         });
         return;
       }
+if (query.data.startsWith('org_')) {
+      const orgId = query.data.replace('org_', '');
+      const org = organizations.find((o) => o.id === orgId) || organizations[0];
+      if (org) {
+        userSessions.set(chatId, {
+          step: 'WAITING_FULLNAME',
+          orgId: org.id,
+          orgName: org.name,
+        });
 
-      if (query.data.startsWith('org_')) {
-        const orgId = query.data.replace('org_', '');
-        const org = organizations.find((o) => o.id === orgId) || organizations[0];
-        if (org) {
-          session = {
-            step: 'WAITING_FULLNAME',
-            orgId: org.id,
-            orgName: org.name,
-          };
-          userSessions.set(chatId, session);
-          savePersistedData();
+        try {
+          await telegramBot?.answerCallbackQuery(query.id);
+        } catch (e) {}
 
-          try {
-            await telegramBot?.answerCallbackQuery(query.id, { text: `Tanlandi: ${org.name}` });
-          } catch (e) {}
+        const safeOrgName = org.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-          try {
-            await telegramBot?.editMessageText(
-              `🏢 Tanlangan tashkilot: <b>${org.name}</b> ✅`,
-              {
-                chat_id: chatId,
-                message_id: query.message.message_id,
-                parse_mode: 'HTML',
-              }
-            );
-          } catch (e) {}
+        await telegramBot?.sendMessage(
+          chatId,
+          `Siz <b>${safeOrgName}</b> tashkilotini tanladingiz.\n\nIltimos, F.I.SH (Ism, familiya va otangizning ismi)ni kiriting:`,
+          {
+            parse_mode: 'HTML',
+            reply_markup: {
+              keyboard: [[{ text: '❌ Bekor qilish' }]],
+              resize_keyboard: true,
+            },
+          }
+        );
+      }
+      return;
+    }
 
           await telegramBot?.sendMessage(
             chatId,
