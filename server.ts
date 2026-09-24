@@ -905,9 +905,9 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
       );
     };
 
-    // Callback tugmalar
+    // callback tugmalar
     telegramBot.on('callback_query', async (query: any) => {
-      const chatId = query.message?.chat?.id;
+      const chatId = query.message?.chat.id;
       if (!chatId || !query.data) return;
 
       const callbackKey = `cb_${query.id}`;
@@ -950,40 +950,26 @@ async function initOrRestartTelegramBot(rawToken?: string | null) {
         });
         return;
       }
-if (query.data.startsWith('org_')) {
-      const orgId = query.data.replace('org_', '');
-      const org = organizations.find((o) => o.id === orgId) || organizations[0];
-      if (org) {
-        userSessions.set(chatId, {
-          step: 'WAITING_FULLNAME',
-          orgId: org.id,
-          orgName: org.name,
-        });
 
-        try {
-          await telegramBot?.answerCallbackQuery(query.id);
-        } catch (e) {}
+      if (query.data.startsWith('org_')) {
+        const orgId = query.data.replace('org_', '');
+        const org = organizations.find((o) => o.id === orgId) || organizations[0];
+        if (org) {
+          userSessions.set(chatId, {
+            step: 'WAITING_FULLNAME',
+            orgId: org.id,
+            orgName: org.name,
+          });
 
-        const safeOrgName = org.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          try {
+            await telegramBot?.answerCallbackQuery(query.id);
+          } catch (e) {}
 
-        await telegramBot?.sendMessage(
-          chatId,
-          `Siz <b>${safeOrgName}</b> tashkilotini tanladingiz.\n\nIltimos, F.I.SH (Ism, familiya va otangizning ismi)ni kiriting:`,
-          {
-            parse_mode: 'HTML',
-            reply_markup: {
-              keyboard: [[{ text: '❌ Bekor qilish' }]],
-              resize_keyboard: true,
-            },
-          }
-        );
-      }
-      return;
-    }
+          const safeOrgName = org.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
           await telegramBot?.sendMessage(
             chatId,
-            `Iltimos, to‘liq <b>Familiyangiz, Ismingiz va Otangizning ismini</b> kiriting:`,
+            `Siz <b>${safeOrgName}</b> tashkilotini tanladingiz.\n\nIltimos, F.I.SH (Ism, familiya va otangizning ismi)ni kiriting:`,
             {
               parse_mode: 'HTML',
               reply_markup: {
@@ -995,6 +981,7 @@ if (query.data.startsWith('org_')) {
         }
         return;
       }
+    });
 
       if (query.data.startsWith('mfypage_')) {
         const targetPage = parseInt(query.data.replace('mfypage_', ''), 10);
