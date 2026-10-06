@@ -122,7 +122,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <ShieldCheck className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
           <h1 className={`text-lg sm:text-xl md:text-2xl font-extrabold ${isDarkMode ? 'text-white' : 'text-slate-900'} tracking-tight`}>
-            2-Sektor Nazorat Portali
+            murojaatlar Nazorat Portali
           </h1>
           <p className={`text-[11px] sm:text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} mt-1`}>
             Murojaatlarni boshqarish va ijro etish axborot tizimi
@@ -149,7 +149,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <div className="pt-2 border-t border-rose-500/30 flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-white">
                 <div className="flex items-center space-x-1">
                   <PhoneCall className="w-3.5 h-3.5 text-rose-400" />
-                  <span>2-Sektor Bosh Kabinet:</span>
+                  <span>murojaatlar Bosh Kabinet:</span>
                 </div>
                 <span className="text-amber-300 font-mono font-bold">+998 94 062-05-55</span>
               </div>
@@ -216,7 +216,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       </div>
 
       <footer className={`mt-5 text-center text-[10px] sm:text-[11px] ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-        2-Sektor Murojaatlar va Tashkilotlar Boshqaruvi Axborot Tizimi
+        murojaatlar Murojaatlar va Tashkilotlar Boshqaruvi Axborot Tizimi
       </footer>
     </div>
   );
